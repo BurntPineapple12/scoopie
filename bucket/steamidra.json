@@ -1,0 +1,41 @@
+{
+    "version": "6.5.6",
+    "description": "Advanced Steam game setup and management tool featuring manifest handling, Lua integrations, LumaCore deployment, multiplayer fixes, DLC unlocking, backups, game fixes, and an easy-to-use GUI",
+    "homepage": "https://github.com/Midrags/SFF",
+    "license": "GPL-3.0",
+    "url": "https://github.com/Midrags/SFF/releases/download/v6.5.6/SteaMidra-6.5.6-Setup.exe#/dl.7z",
+    "hash": "eb29037a3f829dd5efc6b467699074eef87671eb72b16826cdf3bf857c98082a",
+    "pre_install": [
+        "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\SteaMidra.ico\", \"$dir\\Uninstall.exe\" -Force -Recurse",
+        "",
+        "if (!(Test-Path \"$persist_dir\\settings.bin\")) {",
+        "    Write-Host 'File settings.bin does not exists. Creating.' -f Yellow",
+        "    Start-Process -FilePath \"$dir\\SteaMidra_GUI.exe\" -WindowStyle Hidden",
+        "    while (!(Test-Path \"$dir\\settings.bin\")) {",
+        "        Start-Sleep -Milliseconds 500",
+        "    }",
+        "    Start-Sleep 1",
+        "    Stop-Process -Name 'SteaMidra_GUI' -Force",
+        "}"
+    ],
+    "shortcuts": [
+        [
+            "SteaMidra_GUI.exe",
+            "SteaMidra"
+        ]
+    ],
+    "persist": [
+        "manifests",
+        "save_backups",
+        "saved_lua",
+        "settings.bin"
+    ],
+    "pre_uninstall": [
+        "Stop-Process -Name 'SteaMidra_GUI' -Force -ErrorAction SilentlyContinue",
+        "Copy-Item \"$dir\\settings.bin\" \"$persist_dir\" -Force"
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "url": "https://github.com/Midrags/SFF/releases/download/v$version/SteaMidra-$version-Setup.exe#/dl.7z"
+    }
+}
